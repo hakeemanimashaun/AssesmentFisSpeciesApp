@@ -20,7 +20,7 @@ class GalleryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_gallery, container, false)
+        val view = inflater.inflate(R.layout.fragment_gallery, container, false)
         val value = args.post
         val galleryTv = view.findViewById<TextView>(R.id.gallery_tv)
         galleryTv.text = value.SpeciesName
@@ -31,8 +31,8 @@ class GalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         connectivityLiveData = (activity as MainActivity).connectivityLiveData
 
-        connectivityLiveData.observe(viewLifecycleOwner,{networkState->
-            if (networkState== true) {
+        connectivityLiveData.observe(viewLifecycleOwner, { networkState ->
+            if (networkState == true) {
                 // There is network,  display on viewPager
                 //val adapter = ViewPagerAdapter(value)
                 //ViewPager.adapter = 

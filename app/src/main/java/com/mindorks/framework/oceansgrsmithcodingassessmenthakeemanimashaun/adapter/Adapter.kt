@@ -14,31 +14,34 @@ import com.mindorks.framework.oceansgrsmithcodingassessmenthakeemanimashaun.Deta
 import com.mindorks.framework.oceansgrsmithcodingassessmenthakeemanimashaun.R
 import com.mindorks.framework.oceansgrsmithcodingassessmenthakeemanimashaun.models.SpeciesItem
 
-class Adapter: RecyclerView.Adapter<Adapter.ViewHolder>() {
+class Adapter : RecyclerView.Adapter<Adapter.ViewHolder>() {
 
-        inner class ViewHolder (
-            itemView: View
-        ): RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(
+        itemView: View
+    ) : RecyclerView.ViewHolder(itemView) {
 
-            private var nameTextView: TextView = itemView.findViewById(R.id.name_tv)
-            private var imageView: ImageView = itemView.findViewById(R.id.illustration_tv)
-            private var habitatImpactsTextView: TextView = itemView.findViewById(R.id.habitat_impacts_tv)
+        private var nameTextView: TextView = itemView.findViewById(R.id.name_tv)
+        private var imageView: ImageView = itemView.findViewById(R.id.illustration_tv)
+        private var habitatImpactsTextView: TextView =
+            itemView.findViewById(R.id.habitat_impacts_tv)
 
-            fun setData(speciesItem: SpeciesItem) = with(itemView){
-                nameTextView.text = speciesItem.SpeciesName
-                habitatImpactsTextView.text = speciesItem.HabitatImpacts
-                Glide.with(context).load(speciesItem.SpeciesIllustrationPhoto.src).into(imageView)
-
-                itemView.setOnClickListener {
-                        val direction =  DetailsFragmentDirections.actionDetailsFragmentToGalleryFragment(speciesItem)
-                        itemView.findNavController().navigate(direction)
-                }
+        //attaches the retrieved data to the view and displays them
+        fun setData(speciesItem: SpeciesItem) = with(itemView) {
+            nameTextView.text = speciesItem.SpeciesName
+            habitatImpactsTextView.text = speciesItem.HabitatImpacts
+            Glide.with(context).load(speciesItem.SpeciesIllustrationPhoto.src).into(imageView)
+            // sets up on click listener to navigate to the details page for each view
+            itemView.setOnClickListener {
+                val direction =
+                    DetailsFragmentDirections.actionDetailsFragmentToGalleryFragment(speciesItem)
+                itemView.findNavController().navigate(direction)
             }
-
         }
 
+    }
+
     // checking for live state of each post item and updating to current state
-    private val diffCallback = object : DiffUtil.ItemCallback<SpeciesItem>(){
+    private val diffCallback = object : DiffUtil.ItemCallback<SpeciesItem>() {
         override fun areItemsTheSame(oldItem: SpeciesItem, newItem: SpeciesItem): Boolean {
             return oldItem.SpeciesName == newItem.SpeciesName
         }
@@ -48,15 +51,17 @@ class Adapter: RecyclerView.Adapter<Adapter.ViewHolder>() {
         }
 
     }
-    val differ = AsyncListDiffer(this,diffCallback)
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.details_item, parent,false)
-            return ViewHolder(view)
-        }
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.setData(differ.currentList[position])
-        }
+    // differ refreshes the recycler view asynchronously
+    val differ = AsyncListDiffer(this, diffCallback)
+    // inflates the view
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.details_item, parent, false)
+        return ViewHolder(view)
+    }
+    // binds the view
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.setData(differ.currentList[position])
+    }
 
     override fun getItemCount(): Int {
         return differ.currentList.size

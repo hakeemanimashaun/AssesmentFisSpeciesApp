@@ -6,7 +6,7 @@ import com.mindorks.framework.oceansgrsmithcodingassessmenthakeemanimashaun.repo
 
 class ViewModelFactory(
     private val postRepository: Repository
-): ViewModelProvider.Factory{
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return PostViewModel(postRepository) as T
     }

@@ -19,7 +19,7 @@ import com.mindorks.framework.oceansgrsmithcodingassessmenthakeemanimashaun.util
 class DetailsFragment : Fragment() {
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
-    private lateinit var dialog:Dialog
+    private lateinit var dialog: Dialog
     private lateinit var connectivityLiveData: ConnectivityLiveData
     private lateinit var postsViewModel: PostViewModel
     lateinit var postsAdapter: Adapter
@@ -42,20 +42,24 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //access network state
         connectivityLiveData = (activity as MainActivity).connectivityLiveData
+        //access view model
         postsViewModel = (activity as MainActivity).postViewModel
+        // set up alert dialog
         dialog = provideCustomAlertDialog()
+        // set up recycler view
         setupRecyclerView()
-
-        connectivityLiveData.observe(viewLifecycleOwner,{networkState->
-            if (networkState == true){
+        // observe network state
+        connectivityLiveData.observe(viewLifecycleOwner, { networkState ->
+            if (networkState == true) {
                 postsViewModel.getPosts()
             }
         })
 
         // observe to know if all posts are retrieved
         postsViewModel.allPosts.observe(viewLifecycleOwner, { response ->
-            when(response) {
+            when (response) {
                 is Resource.Success -> {
                     dialog.dismiss()
                     response.data?.let { postsResponse ->
@@ -75,6 +79,7 @@ class DetailsFragment : Fragment() {
             }
         })
     }
+
     // recyclerview and layout manager setup
     private fun setupRecyclerView() {
         postsAdapter = Adapter()
